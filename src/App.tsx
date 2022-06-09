@@ -9,7 +9,17 @@ export interface Post {
 }
 
 export default function App() {
-  const [index, setIndex] = React.useState<number>(1);
+  let [index, setIndex] = React.useState<number>(1);
+  
+  function onlyAvanti(){  
+  if(index < 1){
+    setIndex(index +1);
+    alert("non puoi scendere piu di 0")
+  }
+  else
+  setIndex(index -1)
+  }
+
   const [post, setPost] = React.useState<Post>({
     id: null,
     title: null,
@@ -17,14 +27,19 @@ export default function App() {
   });
 
   React.useEffect(() => {
-    fetch(`https://jsonplaceholder.typicode.com/posts/${index}`)
-      .then((res) => res.json())
-      .then((res) => {
-        setPost({ id: res.id, title: res.title, text: res.body });
-      });
+    Fetchami();
   }, [index]);
 
+  function Fetchami() {
+    fetch(`https://jsonplaceholder.typicode.com/posts/${index}`)
+    .then((res) => res.json())
+    .then((res) => {
+      setPost({ id: res.id, title: res.title, text: res.body });
+    });
+  }
+
   return (
+
     <div className={styles.container}>
       {/* card container */}
       <div className={styles["card-container"]}>
@@ -36,19 +51,21 @@ export default function App() {
           </p>
         </div>
       </div>
+
       {/* Card Actions */}
       <div className={styles["card__actions"]}>
         {/* Btn decrease */}
         <button
           className={styles["btn--decrease"]}
-          onClick={() => setIndex(index - 1)}
+          onClick={() => onlyAvanti()}
         >
           Decrease
         </button>
+
         {/* Btn increase */}
         <button
           className={styles["btn--increase"]}
-          onClick={() => setIndex(index + 1)}
+          onClick={() => setIndex(index +1)}
         >
           Increase
         </button>
