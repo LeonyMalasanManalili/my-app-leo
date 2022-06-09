@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+//import { useState, useEffect } from 'react';
+import styles from "./App.module.css";
 
-function App() {
+export interface Post {
+  id: number | null;
+  title: string | null;
+  text: string | null;
+}
+
+export default function App() {
+  const [index, setIndex] = React.useState<number>(1);
+  const [post, setPost] = React.useState<Post>({
+    id: null,
+    title: null,
+    text: null,
+  });
+
+  React.useEffect(() => {
+    fetch(`https://jsonplaceholder.typicode.com/posts/${index}`)
+      .then((res) => res.json())
+      .then((res) => {
+        setPost({ id: res.id, title: res.title, text: res.body });
+      });
+  }, [index]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className={styles.container}>
+      {/* card container */}
+      <div className={styles["card-container"]}>
+        <div className={styles.card}>
+          <h2 className={styles["card__title"]}>{post?.title}</h2>
+          <p className={styles["card__text"]}>{post?.text}</p>
+          <p style={{ color: "grey" }} className={styles["card__text"]}>
+            Post number: #{post?.id}
+          </p>
+        </div>
+      </div>
+      {/* Card Actions */}
+      <div className={styles["card__actions"]}>
+        {/* Btn decrease */}
+        <button
+          className={styles["btn--decrease"]}
+          onClick={() => setIndex(index - 1)}
         >
-          Learn React
-        </a>
-      </header>
+          Decrease
+        </button>
+        {/* Btn increase */}
+        <button
+          className={styles["btn--increase"]}
+          onClick={() => setIndex(index + 1)}
+        >
+          Increase
+        </button>
+      </div>
     </div>
   );
 }
-
-export default App;
